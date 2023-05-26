@@ -1,0 +1,54 @@
+<!doctype html><html lang=en><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><meta name=description content="A conspiracy of Cartographers"><link rel="shortcut icon" href=https://blog-staging.michaelkelly.org/favicon.ico><link rel=stylesheet href=/css/style.min.css><link rel=canonical href=https://blog-staging.michaelkelly.org/2021/04/some-handy-jq-tricks.html><title>Some handy jq tricks</title></head><body><header id=banner><h2><a href=https://blog-staging.michaelkelly.org/>Halting Problem 5.0</a></h2><nav><ul><li><a href=/ title=blog>blog</a></li><li><a href=https://www.michaelkelly.org title=michaelkelly.org>michaelkelly.org</a></li></ul></nav></header><main id=content><article><header id=post-header><h1>Some handy jq tricks</h1><div><time>April 29, 2021</time></div></header><p>I&rsquo;m going to assume you already know what <a href=https://stedolan.github.io/jq/>jq</a> is and you have some surface familiarity with its syntax. It&rsquo;s tremendously useful for ad-hoc interactions with JSON. I&rsquo;m going to outline a few nifty tricks I&rsquo;ve run into. They&rsquo;ll build on each other.</p><p>In all these examples, I&rsquo;m going to assume you have an input file like this:</p><pre tabindex=0><code>{
+    &#34;dcs&#34;: [
+        {
+            &#34;datacenter&#34;: &#34;lax1&#34;,
+            &#34;region&#34;: &#34;west&#34;,
+            &#34;networks&#34;: [&#34;10.4.0.0/16&#34;, &#34;10.5.0.0/16&#34;],
+            &#34;stage&#34;: &#34;production&#34;
+        },
+        {
+            &#34;datacenter&#34;: &#34;lax2&#34;,
+            &#34;region&#34;: &#34;west&#34;,
+            &#34;networks&#34;: [&#34;10.6.0.0/16&#34;],
+            &#34;stage&#34;: &#34;planned&#34;
+        },
+        {
+            &#34;datacenter&#34;: &#34;iad1&#34;,
+            &#34;region&#34;: &#34;east&#34;,
+            &#34;networks&#34;: [&#34;10.0.0.0/16&#34;, &#34;10.1.0.0/16&#34;],
+            &#34;stage&#34;: &#34;production&#34;
+        }
+    ]
+}
+</code></pre><h2 id=outputting-only-some-fields>Outputting only some fields</h2><p>Sometimes you want to output just some fields. &lsquo;{ &mldr; }&rsquo; syntax works well for this, for example:</p><pre tabindex=0><code>jq &#34;.dcs[] | {d: .datacenter, r: .region}&#34; &lt; datacenters.json
+</code></pre><p>You&rsquo;ll get this:</p><pre tabindex=0><code>{
+ &#34;d&#34;: &#34;lax1&#34;,
+ &#34;r&#34;: &#34;west&#34;
+}
+{
+ &#34;d&#34;: &#34;lax2&#34;,
+ &#34;r&#34;: &#34;west&#34;
+}
+{
+ &#34;d&#34;: &#34;iad1&#34;,
+ &#34;r&#34;: &#34;east&#34;
+}
+</code></pre><p>This will iterate over an array of input and include &ldquo;datacenter&rdquo; and &ldquo;region&rdquo; from each element in the output structure. <a href=https://jqplay.org/s/wKlKGnBGLY>Here&rsquo;s a jdplay example of this</a>.</p><h2 id=outputting-csv-and-tsv>Outputting CSV and TSV</h2><p>Sometimes you don&rsquo;t want JSON as the output at all &ndash; maybe you&rsquo;re trying to summarize a JSON data structure. In that case, you can use @csv and @tsv to generate comma-separated and tab-separated output.</p><p>Command:</p><pre tabindex=0><code>jq -r &#34;.dcs[] | [.datacenter, .region] | @csv&#34; &lt; datacenters.json 
+</code></pre><p>Output:</p><pre tabindex=0><code>&#34;lax1&#34;,&#34;west&#34;
+&#34;lax2&#34;,&#34;west&#34;
+&#34;iad1&#34;,&#34;east&#34;
+</code></pre><p>Command:</p><pre tabindex=0><code>jq -r &#34;.dcs[] | [.datacenter, .region] | @tsv&#34; &lt; datacenters.json 
+</code></pre><p>Output:</p><pre tabindex=0><code>lax1 west
+lax2 west
+iad1 east
+</code></pre><p>We use -r so the output isn&rsquo;t JSON-encoded strings. Here are examples using the same data as above: <a href=https://jqplay.org/s/FBGwPoDOgo>Using @csv</a>, and <a href=https://jqplay.org/s/8J6APQ2re9>using @tsv</a></p><p>Note that in these cases we don&rsquo;t use &lsquo;{ &mldr; }&rsquo; to generate JSON dicts, but &lsquo;[ &mldr; ]&rsquo; to generate a list, since neither @csv nor @tsv are a key-value format.</p><h2 id=outputting-several-fields-on-one-line>Outputting several fields on one line</h2><p>Like @tsv and @csv, but with total control over the output. You can use string interpolation, &ldquo;(.field1)&rdquo;, to output more than on field on a line:</p><p>Command:</p><pre tabindex=0><code>jq &#39;.dcs[] | &#34;(.datacenter) is in (.region)&#34;&#39; &lt; datacenters.json  
+</code></pre><p>Output:</p><pre tabindex=0><code>&#34;lax1 is in west&#34;  
+&#34;lax2 is in west&#34;  
+&#34;iad1 is in east&#34;
+</code></pre><p><a href=https://jqplay.org/s/n6epI3wo8H>Here&rsquo;s an example</a>.</p><h2 id=diffs>Diffs</h2><p>Say you have two large, complex JSON files to compare. You can use one of the strategies above to cut down on how much you&rsquo;re outputting, and to condense structures into one line if possible. This will help you get sensible diff output.</p><p>There are some other tricks as well.</p><h3 id=by-sorting-keys>By sorting keys</h3><p><code>--sort-keys/-S</code> helps you compare JSON data with different sort order. For example, is this datacenter list any different than the one above?</p><p>This shows that they are the same (we also use <a href=https://tldp.org/LDP/abs/html/process-sub.html>process substitution</a> here):</p><pre tabindex=0><code>diff -u \  
+  &lt;(jq --sort-keys . &lt; datacenters.json) \  
+  &lt;(jq --sort-keys . &lt;datacenters-outoforder.json)
+</code></pre><p>However, this will not correct for datacenters appearing in a different order, or items in &ldquo;networks&rdquo; being in a different order.</p><h3 id=by-extracting-representative-lines>By extracting representative lines</h3><p>You can use any of the output strategies above for diffs as well. @tsv and @csv work particularly well because you can easily assemble a list of fields in each object you care about, then compare just those fields. You can sort those lines, so order changes don&rsquo;t trip up your diff.</p><p>Here&rsquo;s an example, using two files like our example file above:</p><pre tabindex=0><code>diff -u \  
+  &lt;(jq -r &#39;.dcs[] | [.datacenter, .region, .stage] | @tsv&#39; &lt; dc1.json | sort) \  
+  &lt;(jq -r &#39;.dcs[] | [.datacenter, .region, .stage] | @tsv&#39; &lt; dc2.json | sort)
+</code></pre><p>This example summarizes each file, extracting key fields we care about, and keeping order consistent. Then, we compare the resulting summaries.</p><p>Try making dc1.json and dc2.json by starting with the example files above, then changing the order of each datacenter block. (E.g., move lax1 to the bottom of the list.) Try different modification to the order of the fields, and the entries, to see what it can detect. Here are example <a href=https://gist.github.com/mjkelly/919b1f824b86bf490c8d93953d72555b>dc1.json</a> and <a href=https://gist.github.com/mjkelly/7b9238b5a3135c283bc791f9bd8476c0>dc2.json</a> files.</p><p>The strength of this approach is that we generate line-oriented output that we can manipulate easily with other unix tools, rather than relying on jq to do all the heavy lifting.</p></article></main><footer id=footer><p>Copyright © 2023 Michael Kelly</p><p>Feedback welcome via <a target=_blank href=mailto:m@michaelkelly.org>email</a> or on <a target=_blank href=https://techhub.social/@mkelly>Mastodon</a>.</p></footer></body></html>

@@ -1,0 +1,53 @@
+<!doctype html><html lang=en><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><meta name=description content="A conspiracy of Cartographers"><link rel="shortcut icon" href=https://blog-staging.michaelkelly.org/favicon.ico><link rel=stylesheet href=/css/style.min.css><link rel=canonical href=https://blog-staging.michaelkelly.org/2013/12/sending-sms-alerts-when-power-goes-out.html><title>Sending SMS alerts when the power goes out with apcupsd and Amazon SNS or Plivo</title></head><body><header id=banner><h2><a href=https://blog-staging.michaelkelly.org/>Halting Problem 5.0</a></h2><nav><ul><li><a href=/ title=blog>blog</a></li><li><a href=https://www.michaelkelly.org title=michaelkelly.org>michaelkelly.org</a></li></ul></nav></header><main id=content><article><header id=post-header><h1>Sending SMS alerts when the power goes out with apcupsd and Amazon SNS or Plivo</h1><div><time>December 28, 2013</time></div></header><p><em>[Edited 2014-08-09 to add mention of Plivo (and pointer to sample script), and mention the NOLOGINDIR in the default Debian config.]</em></p><p>This post recounts how I set up SMS alerts to tell me when the power went out in my apartment. I set it up on a Debian testing box. It&rsquo;s very simple. (And you get to use <strong><em>the cloud</em></strong>, whatever that is!) Note that none of this will work if your ISP&rsquo;s networking gear is dead too! This probably won&rsquo;t protect you against a widespread mains outage, unless you&rsquo;re on DSL, or your ISP really cares.</p><p>I haven&rsquo;t tested it in a real power outage yet, and I haven&rsquo;t tested suitability of SNS for this kind of use-case. If you care a lot about this working, go read someone else&rsquo;s instructions.</p><p>Building blocks:</p><ul><li>An APC uninterruptible power supply that powers to your server and any networking gear the server needs. (In my case: dumb switch, and firewall. The cable modem has its own battery, inexplicably.)</li><li>An Amazon Web Services account. We&rsquo;ll be using SNS. <strong>OR</strong>, a <a href=http://plivo.com>Plivo</a> account. (Plivo is much simpler.)</li><li>A phone that can receive text messages. If you&rsquo;re using Amazon, it must be able to receive text messages from shortcodes. (That means <strong>no Google Voice if you&rsquo;re using Amazon</strong>. As of 2013-12-28 I confirmed that it cannot receive text messages from Amazon&rsquo;s shortcode, 30304.)</li><li>A linux server. It needs some software:<ul><li>The <a href=http://aws.amazon.com/cli/>AWS CLI</a>, if you&rsquo;re going to use Amazon to send notifications; <strong>OR</strong>, the <a href=https://www.plivo.com/docs/helpers/python/>plivo python module</a>, if you&rsquo;re going to use Plivo to send notifications.</li><li><a href=http://www.apcupsd.org/>apcupsd</a>. Note the warnings on their page about UPS compatibility. I used a Back-UPS RS 1300G and it worked fine.</li></ul></li></ul><p><strong>Plivo vs Amazon</strong></p><p>Plivo is much simpler to set up. However, you must rent a dedicated phone number from them for $0.80/mo (as of Aug 2014), and there is no &ldquo;subscriber&rdquo; model like Amazon, which means you must send text messages to each recipient individually.</p><p>It depends on what you want. I only want to message myself (1 number) when something happens, and I use Google Voice &ndash; so Plivo is a better fit for me.</p><p><strong>Plivo Setup</strong></p><p>(Skip if you&rsquo;re using Amazon.)</p><p>No detailed instructions, but it is not complicated: go to <a href=http://plivo.com>plivo.com</a> and sign up for a phone number.</p><p>This is the script I wrote to send text messages &ndash; it is just a simple modification of one of Plivo&rsquo;s examples. I put calls to this script in the event scripts in <code>/etc/apcupsd/</code>: <a href=https://github.com/mjkelly/experiments/blob/master/power/plivo-sms.py>plivo-sms.py</a>.</p><p><strong>Amazon SNS Setup</strong></p><p>(Skip if you&rsquo;re using Plivo.)</p><p>Create a new topic in SNS. Note that it is uniquely identified by a string that Amazon calls an ARN. Add an SMS subscriber, and enter your phone number. Wait for the confirmation text message on your phone, and confirm. You may wish to also add an email subscriber.</p><p>Verify: Send a notification from the SNS console, by hitting the &ldquo;Publish&rdquo; button.</p><p><strong>Amazon SNS Client Setup</strong></p><p>(Skip if you&rsquo;re using Plivo.)</p><p>You&rsquo;ll have to be able to publish to SNS from the command-line. Set up a new user by going to the <a href=https://console.aws.amazon.com/iam/home#users>Security Credentials</a> page. Create a new user. Note the credentials amazon has generated.</p><p>Add permissions to the new user so it may publish to the SNS topic you created before.</p><p>I gave my user &ldquo;Publish&rdquo; permissions to all my SNS ARNs, since I&rsquo;m using SNS exclusively for this exercise. You can craft these permissions in the interface by clicking on your user -> Permissions tab -> Add User Policy -> Policy Generator. You can also select Custom Policy and paste in the following policy:</p><pre tabindex=0><code>{
+  &#34;Version&#34;: &#34;2012-10-17&#34;,
+  &#34;Statement&#34;: \[
+    {
+      &#34;Sid&#34;: &#34;Stmt138826832300&#34;,
+      &#34;Effect&#34;: &#34;Allow&#34;,
+      &#34;Action&#34;: \[
+        &#34;sns:Publish&#34;
+      \],
+      &#34;Resource&#34;: \[
+        &#34;\*&#34;
+      \]
+    }
+  \]
+}
+
+```Install the [Amazon command-line interface](http://aws.amazon.com/cli/). Because we&#39;ll be calling aws from apcupsd, configure aws as the root user:```
+\# aws configure
+</code></pre><p>Enter the credentials you created before. I picked the region my SNS topic is in as my default region.</p><p>Verify: Test sending a notification from the command line with aws sns publish (substitute the ARN of your SNS topic for <em>your_arn</em> below):</p><pre tabindex=0><code>\# aws sns publish --topic-arn=_your\_arn_ --message=&#34;something happened on ${HOSTNAME}&#34;
+</code></pre><p>You should get a text message!</p><p><strong>apcupsd Setup</strong></p><p>Install apcupsd via your package manager. Configure it for your UPS by editing /etc/apcupsd/apcupsd.conf. <strong>Two notes for Debian</strong>, (1) comment out the line &ldquo;<code>#NOLOGINDIR /etc</code>&rdquo; unless you want apcupsd to prevent logins after a power failure, and (2) you must subsequently edit /etc/default/apcupsd to set ISCONFIGURED=yes and manually start the service.</p><p>Check that it can talk to your UPS by running apcaccess.</p><p>There are interesting configuration files in /etc/apcupsd &ndash; they define what happens on various power events. The relevant one here is /etc/apcupsd/onbattery, which is run when the UPS switches to battery power. With apcupsd 3.14.10, the file looks like this (comments stripped out):</p><pre tabindex=0><code>SYSADMIN=root
+APCUPSD\_MAIL=&#34;mail&#34;
+
+HOSTNAME=\`hostname\`
+MSG=&#34;$HOSTNAME Power Failure !!!&#34;
+
+(
+   echo &#34;Subject: $MSG&#34;
+   echo &#34; &#34;
+   echo &#34;$MSG&#34;
+   echo &#34; &#34;
+   /sbin/apcaccess status
+) | $APCUPSD\_MAIL -s &#34;$MSG&#34; $SYSADMIN
+exit 0
+</code></pre><p>I edited the file to add the bold text below (again, substitute the ARN of your SNS topic for <em>your_arn</em>):</p><pre tabindex=0><code>SYSADMIN=root
+APCUPSD\_MAIL=&#34;mail&#34;
+
+HOSTNAME=\`hostname\`
+MSG=&#34;$HOSTNAME Power Failure !!!&#34;
+
+(
+   echo &#34;Subject: $MSG&#34;
+   echo &#34; &#34;
+   echo &#34;$MSG&#34;
+   echo &#34; &#34;
+   /sbin/apcaccess status
+) | $APCUPSD\_MAIL -s &#34;$MSG&#34; $SYSADMIN
+ **# either amazon SNS script or plivo script follows:
+aws sns publish --topic-arn=_your\_arn_ \\
+        --subject=&#34;${MSG}&#34; \\
+        --message=&#34;${MSG}&#34;
+# or: /path/to/plivo-sms.py &#34;${MSG}&#34;**
+exit 0
+</code></pre><p>I just use the subject line because text messages must be short. I figure the hostname will give plenty of context.</p><p>(If you&rsquo;ve set up your mail daemon so mail can send messages to non-local addresses, you may wish to change the value of SYSADMIN to your email address as well. Note that doing that <strong>and</strong> adding your email address to the SNS topic will result in duplicate emails &ndash; one verbose, one short.)</p><p>Restart the apcupsd service.</p><p>Verify: Pull the plug of your UPS out of the wall! You should get an anxious message from apcupsd.</p><p><strong>Final Notes</strong></p><p>Again, none of this will work if your ISP&rsquo;s networking gear is dead too! This probably won&rsquo;t protect you against a widespread power outage.</p><p>apcupsd is by default configured to shut down the machine when the UPS&rsquo; battery has 5% or 3 minutes remaining.</p></article></main><footer id=footer><p>Copyright © 2023 Michael Kelly</p><p>Feedback welcome via <a target=_blank href=mailto:m@michaelkelly.org>email</a> or on <a target=_blank href=https://techhub.social/@mkelly>Mastodon</a>.</p></footer></body></html>

@@ -1,0 +1,28 @@
+baseURL = 'https://blog-staging.michaelkelly.org/'
+languageCode = 'en-us'
+title = 'Halting Problem 5.0'
+theme = 'etch'
+
+[params]
+  description = "A conspiracy of Cartographers"
+  copyright = "Copyright © 2023 Michael Kelly"
+  dark = "auto"
+  highlight = true
+
+[menu]
+  [[menu.main]]
+    identifier = "blog"
+    name = "blog"
+    title = "blog"
+    url = "/"
+    weight = 10
+
+  [[menu.main]]
+    identifier = "mkorg"
+    name = "michaelkelly.org"
+    title = "michaelkelly.org"
+    url = "https://www.michaelkelly.org"
+    weight = 20
+
+[permalinks]
+  posts = "/:title/"
