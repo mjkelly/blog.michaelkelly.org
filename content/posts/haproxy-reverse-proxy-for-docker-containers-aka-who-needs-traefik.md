@@ -7,9 +7,9 @@ url: /2023/05/haproxy-reverse-proxy-for-docker.html
 
 I'm going to describe how to generate an haproxy config based on running docker containers, and run haproxy as a reverse proxy for those containers. We'll include a service directory, which can show us what we're running. All with less than 100 lines of python!
 
-This [Here is the code](https://github.com/mjkelly/experiments/blob/master/docker/docker-tmpl/) -- generate-cfg.py is the key part. The rest of the post will talk about the motivation and decisions behind the code.
+[Here is the code](https://github.com/mjkelly/experiments/blob/master/docker/docker-tmpl/) -- generate-cfg.py is the key part. The rest of the post will talk about the motivation and decisions behind the code.
 
-\*\*\*  
+***  
 
 ### Motivation
 
