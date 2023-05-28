@@ -5,9 +5,13 @@ draft: false
 ---
 
 In the spirit of not using the dominant free service for *everything*, I've
-been using [sourcehut](https://sr.ht/) more instead of GitHub. I pay them a
+been using [sourcehut](https://sr.ht/) more instead of GitHub. I sourcehut a
 small fee each month in exchange for a valuable service, which seems perfectly
 fair to me.
+
+[ntietz.com](https://ntietz.com/) has [a post listing good
+reasons](https://ntietz.com/blog/moving-off-github/) to consider moving off of
+GitHub as well.
 
 (The contents of this blog are now in sourcehut! See: 
 <https://git.sr.ht/~mkelly/blog.michaelkelly.org>.)
@@ -59,8 +63,6 @@ The 3 things you have to modify are:
   is the same in both sourcehut and GitHub.
 - `<github-username>`: your GitHub username, used to construct the full name of
   the GitHub repo to mirror to.
-
-
 
 I use this in my [config](https://git.sr.ht/~mkelly/config) repo: you can see
 the `.build.yml` in use
