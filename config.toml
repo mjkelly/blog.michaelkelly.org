@@ -5,7 +5,7 @@ theme = 'etch'
 
 [params]
   description = "A conspiracy of Cartographers"
-  copyright = "Copyright © 2023 Michael Kelly"
+  copyright = "Copyright © 2023 Michael Kelly."
   dark = "auto"
   highlight = true
 
