@@ -30,6 +30,11 @@ tasks:
       ./scripts/deploy.sh
 ```
 
+**NOTE**: This will deploy from any branch that you push. If you want to only
+deploy when you push `main`, you can add a `check-branch` action that aborts
+early, [as suggested
+here](https://lists.sr.ht/~sircmpwn/sr.ht-discuss/%3C3cd90a91b7ce113bb3c5f07898c77543%40hacktivista.com%3E).
+
 To authenticate to the AWS API, we use a [build
 secret](https://man.sr.ht/builds.sr.ht/#secrets) containing an entire
 `~/.aws.config` file. This keeps the build file nice and simple.
@@ -39,7 +44,7 @@ You don't actually need the `sources` section when you're deploying via a
 added. But it's very convenient for testing by submitting ad-hoc build files
 via sourcehut's web interface.
 
-## `scripts/generate.sh`
+## `scripts/deploy.sh`
 
 I use variations of this script for different repos, so it's designed somewhat
 parametrized. To adapt to a new repo you only need to adjust the variables at
