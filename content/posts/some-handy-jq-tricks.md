@@ -153,7 +153,7 @@ There are some other tricks as well.
 }
 ```
 
-This shows that they are the same (we also use [process substitution](https://tldp.org/LDP/abs/html/process-sub.html) here):
+The next command shows that they contain the same values, even though the keys are in a different order. We also use [process substitution](https://tldp.org/LDP/abs/html/process-sub.html) here:
 
 ```
 diff -u \
