@@ -9,6 +9,7 @@ I'm going to assume you already know what [jq](https://stedolan.github.io/jq/) i
 
 In all these examples, I'm going to assume you have an input file like this:
 
+**datacenters.json**
 ```
 {
     "dcs": [
@@ -102,13 +103,13 @@ Like @tsv and @csv, but with total control over the output. You can use string i
 
 Command:
 ```
-jq '.dcs[] | "(.datacenter) is in (.region)"' < datacenters.json  
+jq '.dcs[] | "\(.datacenter) is in \(.region)"' < datacenters.json
 ```
 
 Output:
 ```
-"lax1 is in west"  
-"lax2 is in west"  
+"lax1 is in west"
+"lax2 is in west"
 "iad1 is in east"
 ```
 
@@ -125,14 +126,39 @@ There are some other tricks as well.
 
 `--sort-keys/-S` helps you compare JSON data with different sort order. For example, is this datacenter list any different than the one above?
 
-  
+
+**datacenters2.json**
+```
+{
+    "dcs": [
+        {
+            "datacenter": "lax1",
+            "networks": ["10.4.0.0/16", "10.5.0.0/16"],
+            "region": "west",
+            "stage": "production"
+        },
+        {
+            "datacenter": "lax2",
+            "stage": "planned",
+            "region": "west",
+            "networks": ["10.6.0.0/16"]
+        },
+        {
+            "datacenter": "iad1",
+            "region": "east",
+            "networks": ["10.0.0.0/16", "10.1.0.0/16"],
+            "stage": "production"
+        }
+    ]
+}
+```
 
 This shows that they are the same (we also use [process substitution](https://tldp.org/LDP/abs/html/process-sub.html) here):
 
 ```
-diff -u \  
-  <(jq --sort-keys . < datacenters.json) \  
-  <(jq --sort-keys . <datacenters-outoforder.json)
+diff -u \
+  <(jq --sort-keys . < datacenters.json) \
+  <(jq --sort-keys . <datacenters2.json)
 ```
 
 However, this will not correct for datacenters appearing in a different order, or items in "networks" being in a different order.
@@ -144,13 +170,19 @@ You can use any of the output strategies above for diffs as well. @tsv and @csv 
 Here's an example, using two files like our example file above:
 
 ```
-diff -u \  
-  <(jq -r '.dcs[] | [.datacenter, .region, .stage] | @tsv' < dc1.json | sort) \  
+diff -u \
+  <(jq -r '.dcs[] | [.datacenter, .region, .stage] | @tsv' < dc1.json | sort) \
   <(jq -r '.dcs[] | [.datacenter, .region, .stage] | @tsv' < dc2.json | sort)
 ```
 
+Here are example
+[dc1.json](https://gist.github.com/mjkelly/919b1f824b86bf490c8d93953d72555b)
+and
+[dc2.json](https://gist.github.com/mjkelly/7b9238b5a3135c283bc791f9bd8476c0)
+files.
+
 This example summarizes each file, extracting key fields we care about, and keeping order consistent. Then, we compare the resulting summaries.
 
-Try making dc1.json and dc2.json by starting with the example files above, then changing the order of each datacenter block. (E.g., move lax1 to the bottom of the list.) Try different modification to the order of the fields, and the entries, to see what it can detect. Here are example [dc1.json](https://gist.github.com/mjkelly/919b1f824b86bf490c8d93953d72555b) and [dc2.json](https://gist.github.com/mjkelly/7b9238b5a3135c283bc791f9bd8476c0) files.
+Try making dc1.json and dc2.json by starting with the example files above, then changing the order of each datacenter block. (E.g., move lax1 to the bottom of the list.) Try different modification to the order of the fields, and the entries, to see what it can detect.
 
 The strength of this approach is that we generate line-oriented output that we can manipulate easily with other unix tools, rather than relying on jq to do all the heavy lifting.
