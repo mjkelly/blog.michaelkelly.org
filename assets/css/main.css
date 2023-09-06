@@ -24,10 +24,6 @@ header#banner {
 
 header#banner a {
     color: #313a3d;
-    text-decoration: none;
-}
-
-header#banner a:hover {
     text-decoration: underline;
 }
 
@@ -61,14 +57,9 @@ header#banner nav ul li a {
 
 /* blog.michaelkelly.org: tweaks */
 main#content a, footer#footer a {
-    color: #007dfa;
-    text-decoration: none;
-}
-
-main#content a:hover, footer#footer a:hover {
+    color: #0054b8;
     text-decoration: underline;
 }
-/* end tweaks */
 
 main#content h1,
 main#content h2,
@@ -130,7 +121,7 @@ main#content ul#posts small {
 }
 
 main#content ul#posts li a {
-    text-decoration: none;
+    text-decoration: underline;
 }
 
 main#content ul#posts li a:hover {
