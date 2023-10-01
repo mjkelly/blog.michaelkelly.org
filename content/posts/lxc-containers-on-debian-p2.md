@@ -146,7 +146,7 @@ containers. You can do something different here.
 
 # All Together
 
-Running one `install-debian.sh` ties together all the files we wrote earlier:
+Running `install-debian.sh` uses all the files we wrote earlier:
 
 ```
 $ ./install-debian.sh debtest1
@@ -188,6 +188,8 @@ Running scope as unit: run-r6f6c4facae2246679a4899396c3b51b2.scope
 [...lots more output...]
 done.
 ```
+
+`mkelly` is my username on the container host.
 
 (Yes, that's one of my public ssh keys. You're free to copy it and let me log
 into your servers if you want, but I don't recommend it.)
