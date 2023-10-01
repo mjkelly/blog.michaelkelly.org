@@ -14,12 +14,15 @@
     </header>
     {{- .Content -}}
     <hr>
-    <p>
-    {{ if .Next }}
-      <p>Next Post: {{ with .Next }}<a href="{{ .Permalink }}">{{ .Title }}</a>{{ end }}</p>
+    {{ with .NextInSection }}
+      {{ if . }}
+      <p>Next Post: <a href="{{ .Permalink }}">{{ .Title }}</a></p>
+      {{ end }}
     {{ end }}
-    {{ if .Prev }}
-      <p>Previous Post: {{ with .Prev }}<a href="{{ .Permalink }}">{{ .Title }}</a>{{ end }}</p>
+    {{ with .PrevInSection }}
+      {{ if . }}
+      <p>Previous Post: <a href="{{ .Permalink }}">{{ .Title }}</a></p>
+      {{ end }}
     {{ end }}
 </article>
 {{ end }}
