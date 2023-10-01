@@ -91,9 +91,8 @@ main#content p {
 }
 
 main#content hr {
-    height: 1px;
-    border: 0;
-    background: #d8d8d8;
+    margin: 32px 0;
+    border-top: 1px solid #767676;
 }
 
 main#content abbr {
@@ -270,6 +269,7 @@ footer#footer {
     font-size: 14px;
     font-size: 1.4rem;
     font-weight: 400;
-    color: #b3b3b3;
+    color: #767676;
     margin: 40px 0;
 }
+
