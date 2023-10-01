@@ -203,3 +203,5 @@ creating lightly-customized containers that I can ssh to as my personal user,
 with a single shell command.
 
 I'll cover that in the next part.
+
+[Edit: [Part 2 is here]({{< ref "lxc-containers-on-debian-p2.md" >}}).]
