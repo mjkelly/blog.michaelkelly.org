@@ -13,14 +13,14 @@ theme = 'etch'
   [[menu.main]]
     identifier = "blog"
     name = "blog"
-    title = "blog"
+    title = "Blog homepage"
     url = "/"
     weight = 10
 
   [[menu.main]]
     identifier = "mkorg"
     name = "michaelkelly.org"
-    title = "michaelkelly.org"
+    title = "My personal homepage"
     url = "https://www.michaelkelly.org"
     weight = 20
 

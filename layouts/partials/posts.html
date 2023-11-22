@@ -1,0 +1,6 @@
+<h2>{{ i18n "posts.title" }}</h2>
+<ul id="posts">
+{{- range where site.RegularPages "Type" "in" site.Params.mainSections }}
+    {{ .Render "li" }}
+{{- end }}
+</ul>
