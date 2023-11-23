@@ -5,7 +5,7 @@ date: 2023-11-22T12:07:45-08:00
 
 ## Background
 I have several KVM guests running on my homelab server. Their storage is all
-local, backed by LVM logical volumes. After a power outage, one of my hosts
+local, backed by LVM logical volumes. After a power outage, one of my VMs
 failed to boot with the dreaded [no working init
 found](https://www.kernel.org/doc/html/latest/admin-guide/init.html) error
 message.
@@ -13,7 +13,7 @@ message.
 I'm aware this is a ludicrously specific situation. In case anyone else (including future
 me) runs into this, I want to document how I solved it.
 
-## Initial troubleshooting
+## Which partition has the problem?
 
 Because this particular host had an encrypted disk which required a passphrase
 to be entered on the console, I had clues about how far I got in the boot
@@ -22,11 +22,10 @@ main partition (which contained `/home` and everything else).
 
 So the problem was with the boot partition.
 
-## Troubleshooting
+## Troubleshooting the boot partition
 
 All commands here are were run as root on the KVM host. `caravel` is the name
 of my KVM host, and `deb1` is the name of the guest.
-
 
 ### Turn off the VM
 
