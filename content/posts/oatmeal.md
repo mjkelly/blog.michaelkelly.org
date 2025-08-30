@@ -4,11 +4,12 @@ date: 2025-08-29T17:01:00.000-07:00
 draft: true
 ---
 
-There is a very very good way to make oatmeal that is different from what's on
-the box. This results in a hearty, porridge-y breakfast. The key parts are
-using more than twice called-for amount of water, and adding ground flaxseed.
+There is a very good way to make oatmeal that is different from what's on the
+box. This results in a hearty, porridge-y breakfast. The key parts are using
+more than twice called-for amount of water, and adding ground flaxseed.
 
-Once it's done, it's a great base to add spices or other flavorings to.
+Oatmeal may seem boring, but it's a great consistent base you can build on
+however you like. It's only boring if you let it be boring.
 
 This makes 2 servings.
 
@@ -22,9 +23,9 @@ This makes 2 servings.
 Boil the 4 cups of water in a small pot, with the lid on. Add salt while
 heating the water.
 
-Once water is boiling, take lid off and add the oatmeal. Keep the heat high
-right after you add the oatmeal, but don't walk away. Wait for the water to
-start boiling again, then reduce to a simmer.
+Once the water is boiling, take the lid off and add the oatmeal. Keep the heat
+high right after you add the oatmeal, but don't walk away. Wait for the water
+to start boiling again, then reduce to a simmer.
 
 Find the equilibrium point for your pot, stove, and oatmeal: you want the heat
 as high as possible, while not creating foam at the top which will boil over.
@@ -46,8 +47,6 @@ burning.
 
 Once oats are done, turn off the heat and add the 2tbsp of ground flaxseed. Mix
 it in, and serve.
-
-If you like milk (or soy/almond/oat milk), you can add it now as well.
 
 ## Serving
 
