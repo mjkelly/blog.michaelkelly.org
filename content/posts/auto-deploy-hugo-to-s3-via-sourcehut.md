@@ -10,6 +10,7 @@ This is how I'm auto-deploying a static website generated with
 automatically deployed using sourcehut's [builds.sr.ht
 service](https://man.sr.ht/builds.sr.ht/).
 
+
 ## `.build.yml`
 
 This is what I'm using now. It includes just the build-specific bits, then
@@ -18,31 +19,39 @@ delegates to a `deploy.sh` script (described below):
 ```
 image: alpine/edge
 secrets:
-  - <your ~/.aws/config secret UUID>
+  - e543f154-cfa9-4b56-b8aa-adbd8ec0adf7
 packages:
   - aws-cli
   - hugo
-sources:
-  - <https git URL of the repo you're deploying>
+environment:
+  REPO: blog.michaelkelly.org
 tasks:
   - deploy: |
-      cd <name of repo>
+      cd ~/"${REPO}"
       ./scripts/deploy.sh
+submitter:
+  git.sr.ht:
+    enabled: true
+    allow-refs:
+      - refs/heads/main
 ```
 
-**NOTE**: This will deploy from any branch that you push. If you want to only
-deploy when you push `main`, you can add a `check-branch` action that aborts
-early, [as suggested
-here](https://lists.sr.ht/~sircmpwn/sr.ht-discuss/%3C3cd90a91b7ce113bb3c5f07898c77543%40hacktivista.com%3E).
+Here's the [build manifest
+reference](https://man.sr.ht/builds.sr.ht/manifest.md).
+
+**2026 UPDATE**: I've added a `submitter` section to control which branches get
+pushed. This means when you push to non-`main` branches, you don't deploy --
+this is probably what you want.)
+
+**NOTE**: You can add [a `sources`
+section](https://man.sr.ht/builds.sr.ht/manifest.md#sources) to the file as well, which is not
+required normally, but is very useful for testing by submitting ad-hoc build
+files via sourcehut's web interface.
 
 To authenticate to the AWS API, we use a [build
 secret](https://man.sr.ht/builds.sr.ht/#secrets) containing an entire
 `~/.aws.config` file. This keeps the build file nice and simple.
 
-You don't actually need the `sources` section when you're deploying via a
-`.build.yml` -- the repo containing the `.build.yml` file is automatically
-added. But it's very convenient for testing by submitting ad-hoc build files
-via sourcehut's web interface.
 
 ## `scripts/deploy.sh`
 

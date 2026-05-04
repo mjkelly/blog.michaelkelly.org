@@ -6,13 +6,12 @@ packages:
   - hugo
 environment:
   REPO: blog.michaelkelly.org
-  PUSH_BRANCH: main
 tasks:
-  - check-branch: |
-      cd ~/"${REPO}"
-      if [ "x$(git rev-parse origin/${PUSH_BRANCH} --)" != "x$(git rev-parse HEAD --)" ]; then
-          complete-build
-      fi
   - deploy: |
       cd ~/"${REPO}"
       ./scripts/deploy.sh
+submitter:
+  git.sr.ht:
+    enabled: true
+    allow-refs:
+      - refs/heads/master
