@@ -14,4 +14,4 @@ submitter:
   git.sr.ht:
     enabled: true
     allow-refs:
-      - refs/heads/master
+      - refs/heads/main
