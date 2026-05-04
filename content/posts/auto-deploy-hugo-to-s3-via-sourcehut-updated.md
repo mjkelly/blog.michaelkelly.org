@@ -9,5 +9,6 @@ I've updated my setup for
 
 The post is updated, since I don't want anything outdated lying around.
 
-I'm very thankful to [Drew DeVault](https://drewdevault.com/) & co for running such
-a fine service.
+I've been using this setup to deploy a handful of static sites and it's been
+working great for me. I'm very thankful to [Drew
+DeVault](https://drewdevault.com/) & co for running such a fine service.
