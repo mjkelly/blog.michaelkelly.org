@@ -3,10 +3,6 @@ languageCode = 'en-us'
 title = 'Halting Problem 5.0'
 theme = 'etch'
 
-[author]
-  name = "Michael Kelly"
-  email = "m@michaelkelly.org"
-
 [params]
   description = "A conspiracy of Cartographers"
   copyright = "Copyright © 2023 Michael Kelly."
