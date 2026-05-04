@@ -1,6 +1,5 @@
 ---
-title: Automatically deploying a Hugo static website to S3 via sourcehut
-(updated for 2026)
+title: "Automatically deploying a Hugo static website to S3 via sourcehut - 2026"
 date: 2026-05-03T20:11:51-04:00
 draft: false
 ---
