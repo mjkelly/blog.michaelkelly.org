@@ -12,7 +12,7 @@ Here is the information I've collected so far:
 *   My HP MicroServer Gen8 machine, purchased Nov 2013, came with iLO 4 v1.30.
 *   You can reboot the machine gracefully by simulating the power button being pressed, or immediately (as if you held down the power button).
 *   You can change some boot/power settings that are also in the BIOS. The ones I found interesting were: whether to turn on when power is restored (after being lost), delay when turning back on, priority of boot devices.
-*   You can see the values of the various sensors on the system: fan speed, temperatures. There's even a fun visualization: [![](http://localhost:8080/images/microserver-gen8-temps.png)](http://localhost:8080/images/microserver-gen8-temps.png)
+*   You can see the values of the various sensors on the system: fan speed, temperatures. There's even a fun visualization: [![](/images/microserver-gen8-temps.png)](/images/microserver-gen8-temps.png)
 *   You can view bunch of configuration information (which RAM slots you've filled, what processor you have, etc).
 *   You can turn on SNMP. I'm not sure what's exposed.
 *   You can manage users manually and set ssh keys via the web interface.
