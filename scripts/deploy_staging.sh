@@ -1,0 +1,36 @@
+#!/bin/bash
+set -u
+set -e
+cfg=$HOME/.aws/config
+profile=admin
+bucket=s3://staging.michaelkelly.org
+dir=public
+cf_id=E2XQ3B08KVEO5I
+scripts=$(dirname $0)
+
+which aws || (echo "'aws' command not found. Aborting."; exit 2)
+[ -f $cfg ] || (echo "Config file $cfg does not exist. Aborting."; exit 2)
+
+echo "=== Building ==="
+${scripts}/generate.sh
+
+echo "=== Deploying ==="
+
+echo "Special handling for index.xml (RSS feed)..."
+aws --profile="$profile" \
+  s3 cp "$dir/index.xml" "$bucket/index.xml" \
+  --content-type=application/rss+xml \
+  --cache-control=max-age=3600
+
+echo "Synchronizing directory $PWD/$dir ..."
+aws --profile="$profile" \
+  s3 sync "$dir" "$bucket" \
+  --cache-control=max-age=3600
+
+if [[ -n "$cf_id" ]]; then
+  echo "Invalidating CloudFront..."
+  aws --profile=admin \
+    cloudfront create-invalidation \
+    --distribution-id "${cf_id}" \
+    --paths "/*"
+fi
