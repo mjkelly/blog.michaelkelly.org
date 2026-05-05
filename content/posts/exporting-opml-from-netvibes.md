@@ -9,10 +9,16 @@ I use [NetVibes](http://www.netvibes.com/account/feeds), and have recently tried
 
 > A missing text attribute in any outline element is an error. 
 
-NetVibes' <outline> elements look something like this:  
+NetVibes' `<outline>` elements look something like this:  
   
-<outline title="Netvibes Blog" type="rss" xmlUrl="http://feeds.feedburner.com/NetvibesDevBlog" htmlUrl="http://blog.netvibes.com"/>  
+```
+<outline
+    title="Netvibes Blog"
+    type="rss"
+    xmlUrl="http://feeds.feedburner.com/NetvibesDevBlog"
+    htmlUrl="http://blog.netvibes.com"/>  
+```
   
 It's very easy to fix -- just add a new "text" attribute with the contents of the existing "title" attribute. It trips up some other OPML importers, though.  
   
-\[Edit: I wrote a little python script to fix this problem specifically: [https://github.com/mjkelly/experiments/blob/master/opml-fix-text-attr.py](https://github.com/mjkelly/experiments/blob/master/opml-fix-text-attr.py)\]
+\[Edit: I wrote a little python script to fix this problem specifically: [opml-fix-text-attr.py](https://github.com/mjkelly/experiments/blob/master/opml-fix-text-attr.py)\]
