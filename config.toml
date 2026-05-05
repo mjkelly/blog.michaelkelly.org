@@ -8,6 +8,9 @@ theme = 'etch'
   copyright = "Copyright © 2023 Michael Kelly."
   dark = "auto"
   highlight = true
+  [params.author]
+    email = 'm@michaelkelly.org'
+    name = 'Michael Kelly'
 
 [menu]
   [[menu.main]]
@@ -26,3 +29,7 @@ theme = 'etch'
 
 [permalinks]
   posts = '/:year/:month/:title/'
+
+[outputs]
+  home = ['html', 'rss']
+
