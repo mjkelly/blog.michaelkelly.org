@@ -1,6 +1,6 @@
 baseURL = 'https://blog.michaelkelly.org/'
-languageCode = 'en-us'
-title = 'Halting Problem 5.0'
+languageCode = 'en-US'
+title = 'blog.michaelkelly.org'
 theme = 'etch'
 
 [params]
@@ -8,6 +8,7 @@ theme = 'etch'
   copyright = "Copyright © 2023 Michael Kelly."
   dark = "auto"
   highlight = true
+  favicon_name = "mk-favico.png"
   [params.author]
     email = 'm@michaelkelly.org'
     name = 'Michael Kelly'
@@ -16,9 +17,11 @@ theme = 'etch'
   [[menu.main]]
     identifier = "blog"
     name = "blog"
-    title = "Blog homepage"
+    title = "Homepage for this blog"
     url = "/"
     weight = 10
+    pre = "["
+    post = "]"
 
   [[menu.main]]
     identifier = "mkorg"
@@ -26,6 +29,8 @@ theme = 'etch'
     title = "My personal homepage"
     url = "https://www.michaelkelly.org"
     weight = 20
+    pre = "["
+    post = "]"
 
 [permalinks]
   posts = '/:year/:month/:title/'
