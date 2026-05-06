@@ -20,12 +20,12 @@ echo "Special handling for index.xml (RSS feed)..."
 aws --profile="$profile" \
   s3 cp "$dir/index.xml" "$bucket/index.xml" \
   --content-type=application/rss+xml \
-  --cache-control=max-age=3600
+  --cache-control=max-age=86400
 
 echo "Synchronizing directory $PWD/$dir ..."
 aws --profile="$profile" \
   s3 sync "$dir" "$bucket" \
-  --cache-control=max-age=3600
+  --cache-control=max-age=86400
 
 if [[ -n "$cf_id" ]]; then
   echo "Invalidating CloudFront..."
