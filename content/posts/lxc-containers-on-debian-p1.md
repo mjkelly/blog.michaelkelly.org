@@ -149,7 +149,7 @@ containers.
 
 As your non-root user, you can create a container called `container1`, which
 will prompt for distro, release, and architecture:
-```
+```bash
 systemd-run --user --scope -p "Delegate=yes" -- lxc-create -t download -n container1
 ```
 I chose `debian` / `bookworm` / `amd64`. You can provide answers to all the
@@ -157,19 +157,19 @@ questions the `download` template asks interactively with by adding `-- --dist
 $dist --release $release --arch $arch --variant $variant`
 
 Then start the container:
-```
+```bash
 systemd-run --user --scope -p "Delegate=yes" -- lxc-start container1
 ```
 
 Then attach to the container to get a shell:
-```
+```bash
 systemd-run --user --scope -p "Delegate=yes" -- lxc-attach container1
 ```
 
 That's it!
 
 With `ip a` you should see that you have network addresses:
-```
+```bash
 root@container1:/# ip a
 [...]
 2: eth0@if28: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue state UP group default qlen 1000
@@ -187,7 +187,7 @@ final container setup step below.
 Running a Debian container, there was one strange fix required to allow
 unprivileged users (in the container) to use `ping`:
 
-```
+```bash
 # in the container
 /sbin/setcap cap_net_raw+p /bin/ping
 ```

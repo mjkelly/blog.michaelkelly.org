@@ -44,9 +44,9 @@ You can configure most DNS servers to direct \*.example.com to a single address.
 To test this setup without changing your DNS server, you can edit the  /etc/hosts file on your laptop/desktop (from which you'll be accessing the exposed docker services) to add a line like this:
 
   
-
+```
 192.168.1.10 foo.example.com. bar.example.com. baz.example.com.
-
+```
   
 
 This will direct foo.example.com, bar.example.com, and baz.example.com to 192.168.1.10 on your computer only. Replace with your domains and your docker host's IP address.
@@ -69,11 +69,11 @@ There are 2 parts of this:
 Before we even get started, we need to run a web service in a docker container that we want to expose via the reverse-proxy! Here's an example we can use:
 
   
-
+```bash
 docker run --rm -it -p 8080:80 \\  
   -l http-port=8080 \\  
   --name example-nginx nginx
-
+```
   
 
 This will stay running in the foreground. Once it's running you should be able to access localhost:8080 and see the "Welcome to Nginx!" page.
@@ -86,7 +86,7 @@ Once you've run \`make\` to set up your virtualenv, you can run generate-cfg.py 
 
   
 
-```
+```bash
 ./venv/bin/python3 ./generate-cfg.py \
   --var domain=example.com \
   --template templates/haproxy.tmpl \
@@ -95,7 +95,7 @@ Once you've run \`make\` to set up your virtualenv, you can run generate-cfg.py 
 
 and
 
-```
+```bash
 ./venv/bin/python3 ./generate-cfg.py \
   --hostname foo.example.com \
   --template docker-html.tmpl \
@@ -120,7 +120,7 @@ The logic for extracting the ports is actually not in the python code at all! We
 
   
 
-```
+```bash
 sudo docker run \
   --name haproxy \
   --restart unless-stopped \

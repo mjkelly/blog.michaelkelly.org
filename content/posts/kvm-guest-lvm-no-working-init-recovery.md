@@ -22,7 +22,7 @@ main partition (which contained `/home` and everything else).
 
 So the problem was with the boot partition.
 
-## Troubleshooting the boot partition
+## Troubleshooting
 
 All commands here are were run as root on the KVM host. `caravel` is the name
 of my KVM host, and `deb1` is the name of the guest.

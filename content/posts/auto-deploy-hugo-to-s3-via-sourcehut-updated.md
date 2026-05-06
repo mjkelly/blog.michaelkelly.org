@@ -5,7 +5,10 @@ draft: false
 ---
 
 I've updated my setup for 
-[Automatically deploying a Hugo static website to S3 via sourcehut](https://blog.michaelkelly.org/2023/05/automatically-deploying-a-hugo-static-website-to-s3-via-sourcehut/) for 2026. In the years since I wrote the last post, `submitter` restrictions were added -- they simplify the build files substantially.
+[Automatically deploying a Hugo static website to S3 via sourcehut](
+{{< ref "auto-deploy-hugo-to-s3-via-sourcehut.md" >}}
+) for 2026. In the years since I wrote the last post, `submitter` restrictions
+were added -- they simplify the build files substantially.
 
 The post is updated, since I don't want anything outdated lying around.
 

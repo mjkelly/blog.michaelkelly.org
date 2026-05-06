@@ -16,7 +16,7 @@ service](https://man.sr.ht/builds.sr.ht/).
 This is what I'm using now. It includes just the build-specific bits, then
 delegates to a `deploy.sh` script (described below):
 
-```
+```yaml
 image: alpine/edge
 secrets:
   - e543f154-cfa9-4b56-b8aa-adbd8ec0adf7
@@ -64,7 +64,7 @@ profile](https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-files.ht
 with the `--profile` flag to `aws`. This is not necessary; it's just my
 preference. You can set it to `default`.
 
-```
+```bash
 #!/bin/bash
 set -u
 set -e
@@ -106,7 +106,7 @@ because my sites are relatively small and infrequently updated.
 This one is simple. It generates the contents of the website, and is just
 `hugo` plus whatever flags you decide to use:
 
-```
+```bash
 #!/bin/bash
 hugo --minify --cleanDestinationDir -d ./public || exit 1
 ```

@@ -32,7 +32,7 @@ I hope you do too.
 This is based in part on [~rolandog](https://git.sr.ht/~rolandog/)'s example [.build.yml
 here](https://git.sr.ht/~rolandog/pam-u2f-totp-config/tree/main/item/.build.yml)!
 
-```
+```yaml
 image: alpine/edge
 secrets:
   - <uuid-of-github-push-key>

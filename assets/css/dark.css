@@ -24,6 +24,14 @@ header#banner nav ul li a {
 main#content a, footer#footer a {
     color: #00b1ed;
 }
+
+/* Is this necessary? Is this the result of me ripping out background colors
+ * earlier? Check against default styles. */
+main#content code,
+main#content pre {
+    font-family: 'Menlo', monospace;
+    background: #272822;
+}
 /* end tweaks */
 
 main#content p {

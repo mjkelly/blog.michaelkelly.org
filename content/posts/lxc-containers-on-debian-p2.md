@@ -46,7 +46,7 @@ we'll source later.
 * We'll use this `$LXC_AUTHORIZED_KEYS` var later.
 
 **install-base.sh**:
-```
+```bash
 function systemd_wrap() {
   systemd-run --user --scope -p "Delegate=yes" -- "$@"
 }
@@ -72,7 +72,7 @@ export LXC_AUTHORIZED_KEYS=$(cat $HOME/.ssh/authorized_keys)
 This is how we install a specific distro using `install-base.sh` above:
 
 **install-debian.sh**
-```
+```bash
 #!/bin/bash
 set -e
 set -u
@@ -94,7 +94,7 @@ actual shell scripts to do the provisioning, in case we have more complex logic
 we need to write.
 
 We can replace `TODO: provisioning` with the following:
-```
+```bash
 for script in provisioning/*; do
         echo -e "\n*** Running: ${script} ***"
         cat "${script}" | systemd_wrap lxc-attach "${NAME}" -- /bin/bash
@@ -110,7 +110,7 @@ there, to be run in sequence. For example, this installs some packages in
 a debian container:
 
 **provisioning/02-deb-packages.sh:**
-```
+```bash
 apt-get update
 apt-get upgrade -y
 apt-get install -y openssh-server man curl python3
@@ -122,7 +122,7 @@ not changed in the container_. This means, for example, that `$USER` does not
 change. Remember you're not `ssh`-ing into a remote host!
 
 **provisioning/01-user-setup.sh:**
-```
+```bash
 # This works because environment variables survive lxc-attach
 /sbin/adduser --disabled-password --gecos "" $USER
 mkdir -p /home/$USER/.ssh
@@ -148,7 +148,7 @@ containers. You can do something different here.
 
 Running `install-debian.sh` uses all the files we wrote earlier:
 
-```
+```bash
 $ ./install-debian.sh debtest1
 Running scope as unit: run-r66afa7c42b0246c79dceebfe94845e2d.scope
 The cached copy has expired, re-downloading...

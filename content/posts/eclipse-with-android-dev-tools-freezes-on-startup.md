@@ -11,9 +11,8 @@ I've noticed that, after a few sessions, eclipse will freeze when trying to load
 
 The workaround is to start eclipse with the \-clean argument, which I found on [this StackOverflow page](http://stackoverflow.com/questions/12833060/eclipse-workspace-fails-loading-project-is-not-found):
 
-```
+```bash
 $ eclipse -clean
-
 ```
 
 That is all. I'm not investing any time learning eclipse in any detail at the moment, so I won't care why it works till it stops. This is so future-me doesn't forget what the option is called.

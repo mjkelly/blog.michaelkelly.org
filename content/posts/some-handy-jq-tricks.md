@@ -10,7 +10,7 @@ I'm going to assume you already know what [jq](https://stedolan.github.io/jq/) i
 In all these examples, I'm going to assume you have an input file like this:
 
 **datacenters.json**
-```
+```json
 {
     "dcs": [
         {
@@ -40,13 +40,13 @@ Outputting only some fields
 
 Sometimes you want to output just some fields. '{ ... }' syntax works well for this, for example:
 
-```
+```sh
 jq ".dcs[] | {d: .datacenter, r: .region}" < datacenters.json
 ```
 
 You'll get this:
 
-```
+```json
 {
  "d": "lax1",
  "r": "west"
@@ -69,24 +69,24 @@ Outputting CSV and TSV
 Sometimes you don't want JSON as the output at all -- maybe you're trying to summarize a JSON data structure. In that case, you can use @csv and @tsv to generate comma-separated and tab-separated output.
 
 Command:
-```
+```sh
 jq -r ".dcs[] | [.datacenter, .region] | @csv" < datacenters.json 
 ```
 
 Output:
-```
+```json
 "lax1","west"
 "lax2","west"
 "iad1","east"
 ```
 
 Command:
-```
+```sh
 jq -r ".dcs[] | [.datacenter, .region] | @tsv" < datacenters.json 
 ```
 
 Output:
-```
+```json
 lax1 west
 lax2 west
 iad1 east
@@ -102,12 +102,12 @@ Outputting several fields on one line
 Like @tsv and @csv, but with total control over the output. You can use string interpolation, "(.field1)", to output more than on field on a line:
 
 Command:
-```
+```sh
 jq '.dcs[] | "\(.datacenter) is in \(.region)"' < datacenters.json
 ```
 
 Output:
-```
+```json
 "lax1 is in west"
 "lax2 is in west"
 "iad1 is in east"
@@ -128,7 +128,7 @@ There are some other tricks as well.
 
 
 **datacenters2.json**
-```
+```json
 {
     "dcs": [
         {
@@ -155,7 +155,7 @@ There are some other tricks as well.
 
 The next command shows that they contain the same values, even though the keys are in a different order. We also use [process substitution](https://tldp.org/LDP/abs/html/process-sub.html) here:
 
-```
+```sh
 diff -u \
   <(jq --sort-keys . < datacenters.json) \
   <(jq --sort-keys . <datacenters2.json)
@@ -169,7 +169,7 @@ You can use any of the output strategies above for diffs as well. @tsv and @csv 
 
 Here's an example, using two files like our example file above:
 
-```
+```sh
 diff -u \
   <(jq -r '.dcs[] | [.datacenter, .region, .stage] | @tsv' < dc1.json | sort) \
   <(jq -r '.dcs[] | [.datacenter, .region, .stage] | @tsv' < dc2.json | sort)

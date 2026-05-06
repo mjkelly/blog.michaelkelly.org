@@ -239,6 +239,7 @@ main#content blockquote {
 main#content code,
 main#content pre {
     font-family: 'Menlo', monospace;
+    background: #fafafa;
 }
 
 main#content code {
