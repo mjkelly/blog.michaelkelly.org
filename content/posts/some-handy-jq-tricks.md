@@ -74,7 +74,7 @@ jq -r ".dcs[] | [.datacenter, .region] | @csv" < datacenters.json 
 ```
 
 Output:
-```json
+```
 "lax1","west"
 "lax2","west"
 "iad1","east"
@@ -86,7 +86,7 @@ jq -r ".dcs[] | [.datacenter, .region] | @tsv" < datacenters.json 
 ```
 
 Output:
-```json
+```
 lax1 west
 lax2 west
 iad1 east
