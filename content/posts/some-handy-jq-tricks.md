@@ -61,7 +61,7 @@ You'll get this:
 }
 ```
 
-This will iterate over an array of input and include "datacenter" and "region" from each element in the output structure. [Here's a jdplay example of this](https://jqplay.org/s/wKlKGnBGLY).
+This will iterate over an array of input and include "datacenter" and "region" from each element in the output structure.
 
 Outputting CSV and TSV
 ----------------------
@@ -92,7 +92,7 @@ lax2 west
 iad1 east
 ```
 
-We use -r so the output isn't JSON-encoded strings. Here are examples using the same data as above: [Using @csv](https://jqplay.org/s/FBGwPoDOgo), and [using @tsv](https://jqplay.org/s/8J6APQ2re9)
+We use -r so the output isn't JSON-encoded strings.
 
 Note that in these cases we don't use '{ ... }' to generate JSON dicts, but '\[ ... \]' to generate a list, since neither @csv nor @tsv are a key-value format.
 
@@ -107,13 +107,11 @@ jq '.dcs[] | "\(.datacenter) is in \(.region)"' < datacenters.json
 ```
 
 Output:
-```json
+```
 "lax1 is in west"
 "lax2 is in west"
 "iad1 is in east"
 ```
-
-[Here's an example](https://jqplay.org/s/n6epI3wo8H).
 
 Diffs
 -----
@@ -186,3 +184,9 @@ This example summarizes each file, extracting key fields we care about, and keep
 Try making dc1.json and dc2.json by starting with the example files above, then changing the order of each datacenter block. (E.g., move lax1 to the bottom of the list.) Try different modification to the order of the fields, and the entries, to see what it can detect.
 
 The strength of this approach is that we generate line-oriented output that we can manipulate easily with other unix tools, rather than relying on jq to do all the heavy lifting.
+
+More
+----
+
+[play.jqlang.org](https://play.jqlang.org/) is a nice way to play around with
+different `jq` queries, if you don't have easy access to a command-line.
