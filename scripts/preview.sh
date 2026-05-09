@@ -1,2 +1,2 @@
 #!/bin/bash
-hugo serve --bind 0.0.0.0 --port 8080
+hugo serve --bind 0.0.0.0 --port 8080 --buildDrafts
