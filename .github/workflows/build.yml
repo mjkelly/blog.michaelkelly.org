@@ -1,0 +1,52 @@
+name: Deploy Hugo Site
+
+on:
+  push:
+    branches: ["main"]
+  # Allow running workflow manually from the Actions tab
+  workflow_dispatch:
+
+# Allow only one concurrent deployment, skipping runs queued between the run
+# in-progress and latest queued. Do NOT cancel in-progress runs.
+concurrency:
+  group: "hugo"
+  cancel-in-progress: false
+
+jobs:
+  build-deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write # Required AWS OIDC
+      contents: read  # Required for actions/checkout
+    env:
+      HUGO_VERSION: 0.162.0
+      SITE_DIR: .
+    steps:
+
+      - name: Install Hugo
+        run: |
+          wget -q -O ${{ runner.temp }}/hugo.deb \
+          https://github.com/gohugoio/hugo/releases/download/v${HUGO_VERSION}/hugo_extended_${HUGO_VERSION}_linux-amd64.deb \
+          && sudo dpkg -i ${{ runner.temp }}/hugo.deb
+
+      - name: Checkout
+        uses: actions/checkout@v7
+        with:
+          submodules: recursive
+
+      - name: Build Site
+        env:
+          HUGO_CACHEDIR: ${{ runner.temp }}/hugo_cache
+          HUGO_ENVIRONMENT: production
+        run: "cd ${SITE_DIR} && ./scripts/generate.sh"
+
+      # Authenticate with AWS using OIDC.
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v6.2.4
+        with:
+          role-to-assume: arn:aws:iam::817536375942:role/github-actions-push-static-website
+          aws-region: us-east-1
+
+      # Use AWS CLI directly. It is pre-installed.
+      - name: Run AWS CLI Command
+        run: "cd ${SITE_DIR} && ./scripts/deploy.sh"
