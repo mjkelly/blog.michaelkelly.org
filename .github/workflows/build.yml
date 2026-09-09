@@ -1,3 +1,5 @@
+# Updated:
+# Tue Sep  8 05:29:32 PM PDT 2026
 name: Deploy Hugo Site
 
 on:
@@ -9,7 +11,7 @@ on:
 # Allow only one concurrent deployment, skipping runs queued between the run
 # in-progress and latest queued. Do NOT cancel in-progress runs.
 concurrency:
-  group: "hugo"
+  group: "${{ github.repository }}:${{ github.workflow }}"
   cancel-in-progress: false
 
 jobs:
@@ -30,7 +32,7 @@ jobs:
           && sudo dpkg -i ${{ runner.temp }}/hugo.deb
 
       - name: Checkout
-        uses: actions/checkout@v7
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
           submodules: recursive
 
@@ -42,7 +44,7 @@ jobs:
 
       # Authenticate with AWS using OIDC.
       - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v6.2.4
+        uses: aws-actions/configure-aws-credentials@cbe3b392738ccf3f987d68400dafcf4b0624a56c # v6.2.4
         with:
           role-to-assume: arn:aws:iam::817536375942:role/github-actions-push-static-website
           aws-region: us-east-1
